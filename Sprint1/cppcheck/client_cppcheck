@@ -1,0 +1,17 @@
+src/client.cpp:60:0: style: The function 'close_client' is never used. [unusedFunction]
+
+^
+src/client.cpp:65:0: style: The function 'full_backup' is never used. [unusedFunction]
+
+^
+src/client.cpp:35:0: style: The function 'get_sockfd' is never used. [unusedFunction]
+
+^
+src/client.cpp:49:0: style: The function 'recv_msg' is never used. [unusedFunction]
+
+^
+src/client.cpp:40:0: style: The function 'send_msg' is never used. [unusedFunction]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingIncludeSystem]
+

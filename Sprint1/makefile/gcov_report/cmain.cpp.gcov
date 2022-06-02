@@ -1,0 +1,95 @@
+        -:    0:Source:../src/cmain.cpp
+        -:    0:Graph:cmain.gcno
+        -:    0:Data:cmain.gcda
+        -:    0:Runs:2
+        -:    1:#include<iostream>
+        -:    2:#include<string.h>
+        -:    3:#include<sstream>
+        -:    4:#include<fstream>
+        -:    5:#include<signal.h>
+        -:    6:#include<unistd.h>
+        -:    7:#include "../inc/client.h"
+        -:    8:using namespace std;
+        -:    9://handle the SIGINT signal
+        -:   10:int socket_fd;
+        1:   11:void sigint_handler(int signum)
+        -:   12:{
+        1:   13:    send(socket_fd,"bye",strlen("bye"),0);
+        1:   14:    close(socket_fd);
+        1:   15:    exit(0);
+        -:   16:}
+        2:   17:int main()
+        -:   18:{
+        2:   19:    signal(SIGINT,sigint_handler);
+        -:   20:    while(1)
+        -:   21:    {
+        3:   22:        Client client;
+        3:   23:        socket_fd = client.get_sockfd();
+        4:   24:        string username, password;
+        3:   25:        cout << "username: ";
+        3:   26:        getline(cin, username);
+        3:   27:        cout << "password: ";
+        3:   28:        getline(cin, password);
+        3:   29:        client.send_msg(("auth "+username+" "+password).c_str());
+        3:   30:        if(string(client.recv_msg()) == "true")
+        -:   31:	{
+        2:   32:            cout << "login success" << endl;
+        2:   33:	    client.send_msg(("send present working directory:"));
+        4:   34:	    string pwd = string(client.recv_msg());
+        2:   35:	    cout << "your present working directory:" << pwd << endl;
+        -:   36:	}
+        -:   37:
+        -:   38:        else
+        -:   39:	{        
+        1:   40:        	cout << "login failed" << endl;
+        1:   41:        	client.close_client();
+        1:   42:        	continue;
+        -:   43:        }
+        -:   44:        while(1)
+        -:   45:	{
+        6:   46:            string command("");            
+        4:   47:            cout << "command: ";
+        4:   48:            getline(cin, command);
+        5:   49:            stringstream ss(command);
+        8:   50:            string filename(""),subcommand("");
+        3:   51:            ss >> subcommand >> filename;
+        3:   52:            if(subcommand == "bye")
+        -:   53:	    {
+        1:   54:                client.send_msg(subcommand.c_str());
+    #####:   55:                client.close_client();
+    #####:   56:                exit(0);
+        -:   57:            }
+        2:   58:            else if(subcommand == "full")
+        -:   59:	    {
+        1:   60:                if(filename != "")
+        -:   61:		{
+        1:   62:                    cout << subcommand+" "+filename << endl;
+        1:   63:                    client.send_msg((subcommand+" "+filename).c_str());
+        2:   64:                    string response = client.recv_msg();
+        1:   65:                    if(response == "received file")
+        1:   66:                        client.full_backup(filename);
+        -:   67:                    else
+    #####:   68:                        cout << "server response: " << response << endl;
+        -:   69:                }
+        -:   70:                else
+    #####:   71:                    cout << "invalid filename" << endl;
+        -:   72:            }
+        1:   73:	    else if(subcommand == "ls")
+        -:   74:            {
+        1:   75:		    client.send_msg(subcommand.c_str());
+        2:   76:		    string List_of_files = client.recv_msg();
+        1:   77:		    int len = strlen(List_of_files.c_str());
+        1:   78:		    write(1,List_of_files.c_str(),len);
+        1:   79:		    if(len == 0)
+        -:   80:		    {
+    #####:   81:			    write(1,"No files in that directory",26);
+        -:   82:		    }
+        -:   83:		    else
+        1:   84:			    write(1,List_of_files.c_str(),len);
+        -:   85:	    }
+        -:   86:
+        -:   87:	   else
+    #####:   88:                cout << "invalid command" << endl;    
+        2:   89:        }
+        1:   90:    }
+        -:   91:}

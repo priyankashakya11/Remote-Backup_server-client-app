@@ -1,0 +1,15 @@
+==1115656== Memcheck, a memory error detector
+==1115656== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1115656== Using Valgrind-3.16.1 and LibVEX; rerun with -h for copyright info
+==1115656== Command: ../bin/client
+==1115656== 
+send: Connection reset by peer
+==1115656== 
+==1115656== HEAP SUMMARY:
+==1115656==     in use at exit: 0 bytes in 0 blocks
+==1115656==   total heap usage: 10 allocs, 10 frees, 74,948 bytes allocated
+==1115656== 
+==1115656== All heap blocks were freed -- no leaks are possible
+==1115656== 
+==1115656== For lists of detected and suppressed errors, rerun with: -s
+==1115656== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

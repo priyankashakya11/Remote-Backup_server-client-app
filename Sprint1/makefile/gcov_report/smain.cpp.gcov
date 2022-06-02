@@ -1,0 +1,83 @@
+        -:    0:Source:../src/smain.cpp
+        -:    0:Graph:smain.gcno
+        -:    0:Data:smain.gcda
+        -:    0:Runs:1
+        -:    1://Main funnction for TCP server
+        -:    2:#include<iostream>
+        -:    3:#include<string.h>
+        -:    4:#include<sstream>
+        -:    5:#include<fstream>
+        -:    6:#include<unistd.h>
+        -:    7:#include<signal.h>
+        -:    8:#include "../inc/server.h"
+        -:    9:#include "../inc/user.h"
+        -:   10:
+        -:   11:using namespace std;
+        -:   12:
+        1:   13:int main()
+        -:   14:{
+        1:   15:    Server server;//Creating server class object
+        -:   16:    while(1){
+        3:   17:        int client_sockfd = server.accept_client();
+        -:   18:	//Child process
+        3:   19:        pid_t pid = fork();
+        -:   20:
+        2:   21:        if(pid ==0){
+        -:   22:            while(1){
+    #####:   23:                string request = server.recv_msg(client_sockfd);
+    #####:   24:                cout << "request received : " << request << endl;
+    #####:   25:                stringstream ss(request);
+    #####:   26:                string name,passwd,command,filename("");
+    #####:   27:                ss >> command;//Taking command from user
+        -:   28:                User* current_user;
+        -:   29:		//If authenticated user then login success
+    #####:   30:                if(command == "auth")
+        -:   31:		{
+    #####:   32:                    ss >> name >> passwd;
+    #####:   33:                    User user = User(name,passwd);
+    #####:   34:                    current_user = &user;
+    #####:   35:                    if(server.authenticateUser(user))
+        -:   36:		    {
+    #####:   37:                        cout << "login success" << endl;
+    #####:   38:                        server.send_msg("true",client_sockfd);
+    #####:   39:			server.recv_msg(client_sockfd);
+    #####:   40:			server.send_msg(("../data/"+current_user->getUsername()).c_str(),client_sockfd);
+        -:   41:                    }
+        -:   42:		    //If user is not authenticated
+        -:   43:                    else
+        -:   44:		    {
+    #####:   45:                        server.send_msg("false",client_sockfd);
+    #####:   46:                        close(client_sockfd);
+    #####:   47:                        break;
+        -:   48:                    }
+        -:   49:                }
+        -:   50:		//Full backup
+    #####:   51:                else if(command == "full")
+        -:   52:		{
+    #####:   53:                    ss >> filename;
+    #####:   54:		    filename = filename.substr(filename.find_last_of('/')+1);
+    #####:   55:                        server.send_msg("received file",client_sockfd);
+    #####:   56:                        server.fullbackup(client_sockfd,current_user->getDirectory()+filename);
+        -:   57:                }
+        -:   58:		//Listing the files in the directory
+    #####:   59:		else if(command =="ls")
+        -:   60:		{
+    #####:   61:			string listbuffer = server.listingfiles(current_user->getUsername());
+    #####:   62:			server.send_msg(listbuffer.c_str(),client_sockfd);
+        -:   63:		}
+        -:   64:
+        -:   65:		//Quit from server
+    #####:   66:                else if(command == "bye"){
+    #####:   67:                    close(client_sockfd);
+    #####:   68:                    break;
+        -:   69:                }
+    #####:   70:                ss.clear();
+        -:   71:	
+    #####:   72:            }
+        -:   73:        }
+        -:   74:        else{
+        2:   75:            signal(SIGCHLD,SIG_IGN);
+        2:   76:            close(client_sockfd);//close client connection
+        -:   77:        }
+        2:   78:    }
+        -:   79:}

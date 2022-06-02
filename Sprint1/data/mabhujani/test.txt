@@ -1,0 +1,7 @@
+this is a test file
+using this file program is tested
+this is sample 
+nothing important here
+just a sample plain texts
+
+

@@ -1,0 +1,14 @@
+src/user.cpp:4:19: performance: Function parameter 'name' should be passed by const reference. [passedByValue]
+User::User(string name, string password){
+                  ^
+src/user.cpp:4:32: performance: Function parameter 'password' should be passed by const reference. [passedByValue]
+User::User(string name, string password){
+                               ^
+src/user.cpp:14:0: style: The function 'getDirectory' is never used. [unusedFunction]
+
+^
+src/user.cpp:17:0: style: The function 'getUsername' is never used. [unusedFunction]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingIncludeSystem]
+

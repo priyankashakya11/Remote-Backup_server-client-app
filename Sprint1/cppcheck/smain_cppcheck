@@ -1,0 +1,8 @@
+src/smain.cpp:56:57: error: Uninitialized variable: current_user [uninitvar]
+                        server.fullbackup(client_sockfd,current_user->getDirectory()+filename);
+                                                        ^
+src/smain.cpp:61:44: error: Uninitialized variable: current_user [uninitvar]
+   string listbuffer = server.listingfiles(current_user->getUsername());
+                                           ^
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingIncludeSystem]
+

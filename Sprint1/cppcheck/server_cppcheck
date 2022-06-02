@@ -1,0 +1,32 @@
+src/server.cpp:105:36: performance: Function parameter 'auth_user' should be passed by const reference. [passedByValue]
+bool Server::authenticateUser(User auth_user){
+                                   ^
+src/server.cpp:148:35: performance: Function parameter 'username' should be passed by const reference. [passedByValue]
+char* Server::listingfiles(string username)
+                                  ^
+src/server.cpp:107:0: style: Consider using std::any_of algorithm instead of a raw loop. [useStlAlgorithm]
+        if(auth_user == user)
+^
+src/server.cpp:154:12: style: Consider using std::accumulate algorithm instead of a raw loop. [useStlAlgorithm]
+  contents += entry.path().string() + "\n";
+           ^
+src/server.cpp:94:0: style: The function 'accept_client' is never used. [unusedFunction]
+
+^
+src/server.cpp:105:0: style: The function 'authenticateUser' is never used. [unusedFunction]
+
+^
+src/server.cpp:114:0: style: The function 'fullbackup' is never used. [unusedFunction]
+
+^
+src/server.cpp:148:0: style: The function 'listingfiles' is never used. [unusedFunction]
+
+^
+src/server.cpp:84:0: style: The function 'recv_msg' is never used. [unusedFunction]
+
+^
+src/server.cpp:77:0: style: The function 'send_msg' is never used. [unusedFunction]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingIncludeSystem]
+
